@@ -8,11 +8,11 @@ const {
   refreshtoken,
   loginSuccess,
   logout,
-} = require("./controller");
+} = require("./controller/index");
 const app = express();
 dotenv.config();
 
-//기본 설정
+// 기본 설정
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -23,13 +23,13 @@ app.use(
   })
 );
 
-app.post("/login",login);
-app.get("/accesstoken",accesstoken);
-app.get("/refreshtoken",refreshtoken);
-app.get("/login/success",loginSuccess);
-app.post("/logout",logout);
+app.post("/login", login);
+app.get("/accesstoken", accesstoken);
+app.get("/refreshtoken", refreshtoken);
+app.get("/login/success", loginSuccess);
+app.post("/logout", logout);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080; // PORT가 정의되지 않았을 때 기본값 8080 사용
 app.listen(PORT, () => {
   console.log("Server start ", PORT);
 });
