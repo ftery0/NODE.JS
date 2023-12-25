@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const {
   login,
-  accesstoken,
+  profile,
   refreshtoken,
   loginSuccess,
   logout,
@@ -24,9 +24,10 @@ app.use(
 );
 
 app.post("/login", login);
-app.get("/accesstoken", accesstoken);
+// app.get("/accesstoken", accesstoken);
 app.get("/refreshtoken", refreshtoken);
 app.get("/login/success", loginSuccess);
+app.get("/profile",profile)
 app.post("/logout", logout);
 
 const PORT = process.env.PORT || 8080; // PORT가 정의되지 않았을 때 기본값 8080 사용
