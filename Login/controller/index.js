@@ -4,9 +4,7 @@ const jwt = require("jsonwebtoken");
 const login = (req, res, next) => {
   const { id, password } = req.body;
 
-  const userinfo = userdataBase.filter((item) => {
-    return item.id === id && item.password === password;
-  })[0];
+  const userinfo = userdataBase.find((item) => item.id === id && item.password === password);
 
   if (!userinfo) {
     res.status(201).json("Not Authorized");
@@ -45,12 +43,12 @@ const login = (req, res, next) => {
       res.status(500).json("Internal Server Error");
     }
   }
-  console.log(userinfo);
-  next();
-};
-// const accesstoken = (req, res) => {
 
-// };
+  console.log(userinfo);
+};
+const accesstoken = (req, res) => {
+
+};
 const refreshtoken = (req, res) => {
   try {
     const Token = req.cookies.refreshToken;
@@ -90,7 +88,12 @@ const logout = (req, res) => {
 };
 const profile = (req, res) => {
   try {
-    const accessToken = req.cookies.accessToken;
+    const authorizationHeader = req.headers.authorization;
+    if (!authorizationHeader) {
+      return res.status(401).json("AccessToken not provided");
+    }
+
+    const accessToken = authorizationHeader.split(' ')[1];
     const data = jwt.verify(accessToken, process.env.ACCESS_SECRET);
 
     const userProfile = userdataBase.find((item) => {
@@ -104,14 +107,16 @@ const profile = (req, res) => {
       res.status(404).json("Profile not found");
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json(error);
   }
 };
 
+
 module.exports = {
   login,
   profile,
+  accesstoken,
   refreshtoken,
   loginSuccess,
   logout,
