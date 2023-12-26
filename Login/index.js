@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:3002",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
     credentials: true,
   })
@@ -27,7 +27,7 @@ app.post("/login", login);
 // app.get("/accesstoken", accesstoken);
 app.get("/refreshtoken", refreshtoken);
 app.get("/login/success", loginSuccess);
-app.get("/profile",profile)
+app.get("/profile",  profile)
 app.post("/logout", logout);
 
 const PORT = process.env.PORT || 8080; // PORT가 정의되지 않았을 때 기본값 8080 사용

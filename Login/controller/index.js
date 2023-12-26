@@ -35,16 +35,11 @@ const login = (req, res, next) => {
         }
       );
 
-      //Token 전송 코드
-      res.cookie("accessToken", accessToken, {
-        secure: true,
-        httpOnly: true,
+      res.status(200).json({
+        success: true,
+        accessToken,
+        refreshToken,
       });
-      res.cookie("refreshToken", refreshToken, {
-        secure: true,
-        httpOnly: true,
-      });
-      res.status(200).json("success");
     } catch (error) {
       console.error(error);
       res.status(500).json("Internal Server Error");
@@ -57,67 +52,62 @@ const login = (req, res, next) => {
 
 // };
 const refreshtoken = (req, res) => {
-    try{
-        const Token = req.cookies.refreshToken;
-        const data = jwt.verify(Token , process.env.REFRECH_SECRET);
-        const userdata = userdataBase.filter(item =>{
-            return item.id === data.id && item.password === data.password;
-        })[0]
+  try {
+    const Token = req.cookies.refreshToken;
+    const data = jwt.verify(Token, process.env.REFRECH_SECRET);
+    const userdata = userdataBase.filter((item) => {
+      return item.id === data.id && item.password === data.password;
+    })[0];
 
-        //accesstoken 재발급
-        const accessToken = jwt.sign(
-            {
-              id: userdata.id,
-              username: userdata.username,
-            },
-            process.env.ACCESS_SECRET,
-            {
-              expiresIn: "1m",
-              issuer: "About Tech",
-            }
-          );
-          res.cookie("accessToken", accessToken, {
-            secure: true,
-            httpOnly: true,
-          });
-          res.status(200).json("success")
-
-    }catch(error){
-        res.status(500).json(error);
-    }
-
+    //accesstoken 재발급
+    const accessToken = jwt.sign(
+      {
+        id: userdata.id,
+        username: userdata.username,
+      },
+      process.env.ACCESS_SECRET,
+      {
+        expiresIn: "1m",
+        issuer: "About Tech",
+      }
+    );
+    res.status(200).json({
+      success: true,
+      accessToken,
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };
-const loginSuccess = (req, res) => {
-   
-};
+const loginSuccess = (req, res) => {};
 const logout = (req, res) => {
-
-    try {
-        req.cookies("accessToken","");
-        res.status(200).json("success");
-    } catch (error) {
-        res.status(500).json(error);
-    }
+  try {
+    req.cookies("accessToken", "");
+    res.status(200).json("success");
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };
 const profile = (req, res) => {
-    try {
-      const accessToken = req.cookies.accessToken;
-      const data = jwt.verify(accessToken, process.env.ACCESS_SECRET);
-  
-      const userProfile = userdataBase.find((item) => {
-        return item.id === data.id;
-      });
-  
-      if (userProfile) {
-        const { username } = userProfile;
-        res.status(200).json({ username });
-      } else {
-        res.status(404).json("Profile not found");
-      }
-    } catch (error) {
-      res.status(500).json(error);
+  try {
+    const accessToken = req.cookies.accessToken;
+    const data = jwt.verify(accessToken, process.env.ACCESS_SECRET);
+
+    const userProfile = userdataBase.find((item) => {
+      return item.id === data.id;
+    });
+
+    if (userProfile) {
+      const { username } = userProfile;
+      res.status(200).json({ data: { username } });
+    } else {
+      res.status(404).json("Profile not found");
     }
-  };
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
 
 module.exports = {
   login,
