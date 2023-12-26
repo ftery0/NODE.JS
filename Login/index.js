@@ -5,6 +5,7 @@ const cors = require("cors");
 const {
   login,
   profile,
+  accesstoken,
   refreshtoken,
   loginSuccess,
   logout,
@@ -24,7 +25,7 @@ app.use(
 );
 
 app.post("/login", login);
-// app.get("/accesstoken", accesstoken);
+app.get("/accesstoken", accesstoken);
 app.get("/refreshtoken", refreshtoken);
 app.get("/login/success", loginSuccess);
 app.get("/profile",  profile)
