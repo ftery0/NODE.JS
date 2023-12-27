@@ -8,6 +8,7 @@ const {
   accesstoken,
   refreshtoken,
   loginSuccess,
+  createuser,
   logout,
 } = require("./controller/index");
 const app = express();
@@ -29,6 +30,7 @@ app.get("/accesstoken", accesstoken);
 app.get("/refreshtoken", refreshtoken);
 app.get("/login/success", loginSuccess);
 app.get("/profile",  profile)
+app.post("/createuser", createuser);
 app.post("/logout", logout);
 
 const PORT = process.env.PORT || 8080; // PORT가 정의되지 않았을 때 기본값 8080 사용
