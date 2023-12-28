@@ -124,7 +124,7 @@ const profile = (req, res) => {
 };
 const createuser = (req, res)=>{
   try {
-    const { id, username, password } = req.body;
+    const { id, username, password } = req.headers;
 
     const userExists = userdataBase.some((item) => item.id === id);
 
