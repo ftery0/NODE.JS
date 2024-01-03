@@ -4,10 +4,12 @@ const jwt = require("jsonwebtoken");
 const login = (req, res, next) => {
   const { id, password } = req.body;
 
-  const userinfo = userdataBase.find((item) => item.id === id && item.password === password);
+  const userinfo = userdataBase.find(
+    (item) => item.id === id && item.password === password
+  );
 
   if (!userinfo) {
-    res.status(201).json("Not Authorized");
+    res.status(205).json("Not Authorized");
   } else {
     try {
       const accessToken = jwt.sign(
@@ -43,12 +45,8 @@ const login = (req, res, next) => {
       res.status(500).json("Internal Server Error");
     }
   }
-
-  console.log(userinfo);
 };
-const accesstoken = (req, res) => {
-
-};
+const accesstoken = (req, res) => {};
 const refreshtoken = (req, res) => {
   try {
     const refreshToken = req.headers.authorization;
@@ -104,7 +102,7 @@ const profile = (req, res) => {
       return res.status(403).json("AccessToken not provided");
     }
 
-    const accessToken = authorizationHeader.split(' ')[1];
+    const accessToken = authorizationHeader.split(" ")[1];
     const data = jwt.verify(accessToken, process.env.ACCESS_SECRET);
 
     const userProfile = userdataBase.find((item) => {
@@ -122,7 +120,7 @@ const profile = (req, res) => {
     res.status(500).json(error);
   }
 };
-const createuser = (req, res)=>{
+const createuser = (req, res) => {
   try {
     const { id, username, password } = req.headers;
 
@@ -134,15 +132,11 @@ const createuser = (req, res)=>{
     const newUser = { id, username, password };
     userdataBase.push(newUser);
     res.status(200).json("success");
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).json(error);
   }
-
-}
-
-
-
+};
 
 module.exports = {
   login,
