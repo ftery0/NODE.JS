@@ -1,23 +1,33 @@
 const userdataBase = require("../DataBase");
 const jwt = require("jsonwebtoken");
+const db = require("../Data/db");
 
 const login = (req, res, next) => {
-  const { id, password } = req.body;
-
+  const { userid, password } = req.body;
+  db.query(
+    "SELECT * FROM users WHERE userid = ? AND password = ?",
+    [userid, password],
+    function (error, results, fields) {
+      if (error) {
+        console.error(error);
+        return res.status(500).json("Internal Server Error");
+      }
+    }
+  );
   const userinfo = userdataBase.find(
-    (item) => item.id === id && item.password === password
+    (item) => item.userid === userid && item.password === password
   );
 
   if (!userinfo) {
-    res.status(205).json("Not Authorized");
+    res.status(404).json("Not Authorized");
   } else {
     try {
       const accessToken = jwt.sign(
         {
-          id: userinfo.id,
+          userid: userinfo.userid,
           username: userinfo.username,
         },
-        process.env.ACCESS_SECRET,
+        process.env.ACCESSh_SECRET,
         {
           expiresIn: "1m",
           issuer: "About Tech",
@@ -25,7 +35,7 @@ const login = (req, res, next) => {
       );
       const refreshToken = jwt.sign(
         {
-          id: userinfo.id,
+          userid: userinfo.userid,
           username: userinfo.username,
         },
         process.env.REFRECH_SECRET,
@@ -57,7 +67,7 @@ const refreshtoken = (req, res) => {
 
     const data = jwt.verify(refreshToken, process.env.REFRECH_SECRET);
     const userdata = userdataBase.find((item) => {
-      return item.id === data.id && item.password === data.password;
+      return item.userid === data.userid && item.password === data.password;
     });
 
     if (!userdata) {
@@ -67,7 +77,7 @@ const refreshtoken = (req, res) => {
     // 새로운 액세스 토큰 발급
     const newAccessToken = jwt.sign(
       {
-        id: userdata.id,
+        userid: userdata.userid,
         username: userdata.username,
       },
       process.env.ACCESS_SECRET,
@@ -121,17 +131,36 @@ const profile = (req, res) => {
   }
 };
 const createuser = (req, res) => {
+  const { userid, username, password } = req.body;
+  const M = req.body;
+  console.log(M);
   try {
-    const { id, username, password } = req.headers;
+    db.query(
+      "SELECT * FROM users WHERE id = ?",
+      [userid],
+      function (error, results) {
+        if (error) {
+          console.error(error);
+          return res.status(500).json("Internal Server Error");
+        }
 
-    const userExists = userdataBase.some((item) => item.id === id);
+        if (results.length > 0) {
+          return res.status(400).json("User already exists");
+        }
 
-    if (userExists) {
-      return res.status(400).json("User already exists");
-    }
-    const newUser = { id, username, password };
-    userdataBase.push(newUser);
-    res.status(200).json("success");
+        db.query(
+          `INSERT INTO users (userid, username, password) VALUES (?, ?, ?)`,
+          [userid, username, password],
+          function (error) {
+            if (error) {
+              console.error(error);
+              return res.status(500).json("Internal Server Error");
+            }
+          }
+        );
+        res.status(200).json("User created successfully");
+      }
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
