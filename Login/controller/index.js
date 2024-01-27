@@ -3,10 +3,10 @@ const jwt = require("jsonwebtoken");
 const db = require("../Data/db");
 
 const login = (req, res, next) => {
-  const { userid, password } = req.body;
+  const { id, password } = req.body;
   db.query(
-    "SELECT * FROM users WHERE userid = ? AND password = ?",
-    [userid, password],
+    "SELECT * FROM users WHERE id = ? AND password = ?",
+    [id, password],
     function (error, results, fields) {
       if (error) {
         console.error(error);
@@ -15,7 +15,7 @@ const login = (req, res, next) => {
     }
   );
   const userinfo = userdataBase.find(
-    (item) => item.userid === userid && item.password === password
+    (item) => item.id === id && item.password === password
   );
 
   if (!userinfo) {
@@ -24,7 +24,7 @@ const login = (req, res, next) => {
     try {
       const accessToken = jwt.sign(
         {
-          userid: userinfo.userid,
+          id: userinfo.id,
           username: userinfo.username,
         },
         process.env.ACCESSh_SECRET,
@@ -35,7 +35,7 @@ const login = (req, res, next) => {
       );
       const refreshToken = jwt.sign(
         {
-          userid: userinfo.userid,
+          id: userinfo.id,
           username: userinfo.username,
         },
         process.env.REFRECH_SECRET,
@@ -67,7 +67,7 @@ const refreshtoken = (req, res) => {
 
     const data = jwt.verify(refreshToken, process.env.REFRECH_SECRET);
     const userdata = userdataBase.find((item) => {
-      return item.userid === data.userid && item.password === data.password;
+      return item.id === data.id && item.password === data.password;
     });
 
     if (!userdata) {
@@ -77,7 +77,7 @@ const refreshtoken = (req, res) => {
     // 새로운 액세스 토큰 발급
     const newAccessToken = jwt.sign(
       {
-        userid: userdata.userid,
+        id: userdata.id,
         username: userdata.username,
       },
       process.env.ACCESS_SECRET,
@@ -131,13 +131,13 @@ const profile = (req, res) => {
   }
 };
 const createuser = (req, res) => {
-  const { userid, username, password } = req.body;
+  const { id, username, password } = req.body;
   const M = req.body;
   console.log(M);
   try {
     db.query(
       "SELECT * FROM users WHERE id = ?",
-      [userid],
+      [id],
       function (error, results) {
         if (error) {
           console.error(error);
@@ -149,8 +149,8 @@ const createuser = (req, res) => {
         }
 
         db.query(
-          `INSERT INTO users (userid, username, password) VALUES (?, ?, ?)`,
-          [userid, username, password],
+          `INSERT INTO users (id, username, password) VALUES (?, ?, ?)`,
+          [id, username, password],
           function (error) {
             if (error) {
               console.error(error);
