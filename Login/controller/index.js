@@ -12,49 +12,45 @@ const login = (req, res, next) => {
         console.error(error);
         return res.status(500).json("Internal Server Error");
       }
+      if(results.length > 0 ){
+        res.status(404).json("Not Authorized");
+      }else{
+        try {
+          const accessToken = jwt.sign(
+            {
+              id: results.id,
+              username: results.username,
+            },
+            process.env.ACCESSh_SECRET,
+            {
+              expiresIn: "1m",
+              issuer: "About Tech",
+            }
+          );
+          const refreshToken = jwt.sign(
+            {
+              id: results.id,
+              username: results.username,
+            },
+            process.env.REFRECH_SECRET,
+            {
+              expiresIn: "24h",
+              issuer: "About Tech",
+            }
+          );
+    
+          res.status(200).json({
+            success: true,
+            accessToken,
+            refreshToken,
+          });
+        } catch (error) {
+          console.error(error);
+          res.status(500).json("Internal Server Error");
+        }
+      }
     }
   );
-  const userinfo = userdataBase.find(
-    (item) => item.id === id && item.password === password
-  );
-
-  if (!userinfo) {
-    res.status(404).json("Not Authorized");
-  } else {
-    try {
-      const accessToken = jwt.sign(
-        {
-          id: userinfo.id,
-          username: userinfo.username,
-        },
-        process.env.ACCESSh_SECRET,
-        {
-          expiresIn: "1m",
-          issuer: "About Tech",
-        }
-      );
-      const refreshToken = jwt.sign(
-        {
-          id: userinfo.id,
-          username: userinfo.username,
-        },
-        process.env.REFRECH_SECRET,
-        {
-          expiresIn: "24h",
-          issuer: "About Tech",
-        }
-      );
-
-      res.status(200).json({
-        success: true,
-        accessToken,
-        refreshToken,
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json("Internal Server Error");
-    }
-  }
 };
 const accesstoken = (req, res) => {};
 const refreshtoken = (req, res) => {
