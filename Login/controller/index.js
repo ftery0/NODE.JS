@@ -12,9 +12,9 @@ const login = (req, res, next) => {
         console.error(error);
         return res.status(500).json("Internal Server Error");
       }
-      if(results.length > 0 ){
+      if (results.length > 0) {
         res.status(404).json("Not Authorized");
-      }else{
+      } else {
         try {
           const accessToken = jwt.sign(
             {
@@ -38,7 +38,7 @@ const login = (req, res, next) => {
               issuer: "About Tech",
             }
           );
-    
+
           res.status(200).json({
             success: true,
             accessToken,
