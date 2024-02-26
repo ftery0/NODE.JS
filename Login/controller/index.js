@@ -1,6 +1,18 @@
 const userdataBase = require("../DataBase");
 const jwt = require("jsonwebtoken");
 const db = require("../Data/db");
+const multer = require("multer");
+const path = require("path");
+
+
+const uploadDir = path.join(__dirname, "../uploads");
+
+
+const upload = multer({
+  dest: uploadDir,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 최대 파일 크기 10MB
+});
+
 
 const login = (req, res, next) => {
   const { id, password } = req.body;
@@ -126,6 +138,38 @@ const profile = (req, res) => {
     res.status(500).json(error);
   }
 };
+const createpost = (req, res) => {
+  const { userId, title, content } = req.body;
+  const image = req.file; // 이미지 파일
+
+  try {
+    // 이미지 파일이 있는지 확인
+    if (!image) {
+      return res.status(400).json("Image file not provided");
+    }
+
+    // 이미지 파일을 업로드하고 파일 경로를 받아옴
+    const imagePath = image.path;
+
+    // 게시물 정보를 데이터베이스에 저장
+    db.query(
+      "INSERT INTO posts (userId, title, content, imageUrl) VALUES (?, ?, ?, ?)",
+      [userId, title, content, imagePath],
+      function (error, results) {
+        if (error) {
+          console.error(error);
+          return res.status(500).json("Internal Server Error");
+        }
+
+        res.status(200).json("Post created successfully");
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
+
 const createuser = (req, res) => {
   const { id, username, password } = req.body;
   const M = req.body;
@@ -170,5 +214,6 @@ module.exports = {
   refreshtoken,
   loginSuccess,
   createuser,
+  createpost,
   logout,
 };
