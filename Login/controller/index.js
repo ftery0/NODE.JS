@@ -16,10 +16,13 @@ const upload = multer({
 
 const login = (req, res, next) => {
   const { id, password } = req.body;
-  db.query(
-    "SELECT * FROM users WHERE id = ? AND password = ?",
-    [id, password],
-    function (error, results, fields) {
+  if (id === userdataBase.id && password === userdataBase.password){
+
+  
+  // db.query(
+  //   "SELECT * FROM users WHERE id = ? AND password = ?",
+  //   [id, password],
+    // function (error, results, fields) {
       if (error) {
         console.error(error);
         return res.status(500).json("Internal Server Error");
@@ -61,8 +64,9 @@ const login = (req, res, next) => {
           res.status(500).json("Internal Server Error");
         }
       }
-    }
-  );
+    // }
+  // );
+}
 };
 const accesstoken = (req, res) => {};
 const refreshtoken = (req, res) => {
