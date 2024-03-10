@@ -2,7 +2,8 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const { login, profile, accesstoken, refreshtoken, loginSuccess, createuser, createpost, logout } = require("./controller/index");
+const { profile, accesstoken, refreshtoken, loginSuccess, createuser, createpost, logout } = require("./controller/index");
+const {login} = require('./controller/User/user')
 const app = express();
 dotenv.config();
 
