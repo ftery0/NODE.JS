@@ -2,8 +2,9 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const { profile, accesstoken, refreshtoken, loginSuccess, createuser, createpost, logout } = require("./controller/index");
-const {login} = require('./controller/User/user')
+const {login} = require('./controller/auth/user')
+const {createuser} = require('./controller/auth/create')
+const { profile, accesstoken, refreshtoken, loginSuccess, createpost, logout } = require("./controller/index");
 const app = express();
 dotenv.config();
 

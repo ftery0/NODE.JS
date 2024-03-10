@@ -8,8 +8,6 @@ const path = require("path");
 
 const uploadDir = path.join(__dirname, "../uploads");
 
-
-
 const upload = multer({
   dest: uploadDir,
   limits: { fileSize: 10 * 1024 * 1024 }, // 최대 파일 크기 10MB
@@ -122,49 +120,13 @@ const createpost = (req, res) => {
   }
 };
 
-const createuser = (req, res) => {
-  const { id, username, password } = req.body;
-  const M = req.body;
-  console.log(M);
-  try {
-    db.query(
-      "SELECT * FROM users WHERE id = ?",
-      [id],
-      function (error, results) {
-        if (error) {
-          console.error(error);
-          return res.status(500).json("Internal Server Error");
-        }
 
-        if (results.length > 0) {
-          return res.status(400).json("User already exists");
-        }
-
-        db.query(
-          `INSERT INTO users (id, username, password) VALUES (?, ?, ?)`,
-          [id, username, password],
-          function (error) {
-            if (error) {
-              console.error(error);
-              return res.status(500).json("Internal Server Error");
-            }
-          }
-        );
-        res.status(200).json("User created successfully");
-      }
-    );
-  } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
-  }
-};
 
 module.exports = {
   profile,
   accesstoken,
   refreshtoken,
   loginSuccess,
-  createuser,
   createpost,
   logout,
 };
