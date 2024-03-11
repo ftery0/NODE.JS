@@ -13,8 +13,8 @@ const login = (req, res, next) => {
 
     // 환경 변수 값이 정의 확인
     if (!process.env.ACCESS_SECRET || !process.env.REFRESH_SECRET) {
-      console.error("Environment variables for ACCESS_SECRET or REFRESH_SECRET are not defined.");
-      return res.status(500).json("Internal Server Error due to configuration issues");
+      console.error("ACCESS_SECRET or REFRESH_SECRET error");
+      return res.status(500).json("Internal Server Error due to configuration issues"); 
     }
 
     db.query(
