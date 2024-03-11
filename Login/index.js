@@ -4,7 +4,8 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const {login} = require('./controller/auth/user')
 const {createuser} = require('./controller/auth/create')
-const { profile, accesstoken, refreshtoken, loginSuccess, createpost, logout } = require("./controller/index");
+const {createPost} = require('./controller/Post/post')
+const { profile, accesstoken, refreshtoken, loginSuccess,logout } = require("./controller/index");
 const app = express();
 dotenv.config();
 
@@ -36,7 +37,7 @@ app.get("/accesstoken", accesstoken);
 app.get("/refreshtoken", refreshtoken);
 app.get("/login/success", loginSuccess);
 app.get("/profile", profile);
-app.post("/create/post", upload.single("image"), createpost);
+app.post("/create/post", upload.single("image"), createPost);
 app.post("/createuser", createuser);
 app.post("/logout", logout);
 
