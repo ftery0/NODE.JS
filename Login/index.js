@@ -5,7 +5,8 @@ const cors = require("cors");
 const {login} = require('./controller/auth/user')
 const {createuser} = require('./controller/auth/create')
 const {createPost} = require('./controller/Post/post')
-const { profile, accesstoken, refreshtoken, loginSuccess,logout } = require("./controller/index");
+const {refreshtoken} = require('./controller/auth/NewToken')
+const { profile, accesstoken, loginSuccess,logout } = require("./controller/index");
 const app = express();
 dotenv.config();
 
