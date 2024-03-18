@@ -61,6 +61,7 @@ const login = (req, res, next) => {
               accessToken,
               refreshToken,
             });
+            console.log("success to log in user "+id);
           } catch (error) {
             console.error(error);
             res.status(500).json("Internal Server Error");

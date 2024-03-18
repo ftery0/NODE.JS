@@ -32,6 +32,7 @@ const createuser = async (req, res) => {
         );
       }
     );
+    console.log("success to create user"+id+username+password);
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
