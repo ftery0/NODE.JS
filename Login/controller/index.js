@@ -4,7 +4,6 @@ const db = require("../Data/db");
 const multer = require("multer");
 const path = require("path");
 
-
 const accesstoken = (req, res) => {};
 
 const loginSuccess = (req, res) => {};
@@ -41,9 +40,6 @@ const profile = (req, res) => {
     res.status(500).json(error);
   }
 };
-
-
-
 
 module.exports = {
   profile,
