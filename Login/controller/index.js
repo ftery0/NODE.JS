@@ -7,14 +7,7 @@ const path = require("path");
 const accesstoken = (req, res) => {};
 
 const loginSuccess = (req, res) => {};
-const logout = (req, res) => {
-  try {
-    req.cookies("accessToken", "");
-    res.status(200).json("success");
-  } catch (error) {
-    res.status(500).json(error);
-  }
-};
+
 const profile = (req, res) => {
   try {
     const authorizationHeader = req.headers.authorization;
@@ -45,5 +38,4 @@ module.exports = {
   profile,
   accesstoken,
   loginSuccess,
-  logout,
 };

@@ -40,7 +40,7 @@ app.get("/login/success", loginSuccess);
 app.get("/profile", profile);
 app.post("/create/post", upload.single("image"), createPost);
 app.post("/createuser", createuser);
-app.post("/logout", logout);
+
 
 const PORT = process.env.PORT || 8080; 
 app.listen(PORT, () => {
